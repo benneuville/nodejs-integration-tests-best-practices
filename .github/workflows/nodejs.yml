@@ -28,7 +28,7 @@ jobs:
 
     - name: Cache node_modules
       id: cache-npm
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       env:
         cache-name: cache-node-modules
       with:
