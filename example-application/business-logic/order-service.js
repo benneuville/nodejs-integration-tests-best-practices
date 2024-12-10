@@ -15,6 +15,7 @@ module.exports.addOrder = async function (newOrder) {
     throw new AppError('invalid-order', `No product-id specified`, 400);
   }
 
+  
   // verify user existence by calling external Microservice
   const userWhoOrdered = await getUserFromUsersService(newOrder.userId);
 
