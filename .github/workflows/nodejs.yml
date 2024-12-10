@@ -113,5 +113,8 @@ jobs:
               - 'example-application/data-access/**'
               - 'example-application/entry-points/**'
               - 'recipes/**'
+            test:
+              - 'example-application/test/**'
+              - 'recipes/**'
     
 
