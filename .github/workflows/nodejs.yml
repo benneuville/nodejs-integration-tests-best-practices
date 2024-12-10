@@ -36,7 +36,10 @@ jobs:
           npm-feature-
           npm-
 
-    - run: sudo apt-get install -y docker-compose
+    -name: Docker compose setup
+      - uses: KengoTODA/actions-setup-docker-compose@v1
+        with:
+          version: '2.14.2' # the full version of `docker-compose` command
     - run: npm ci
     # create an artifact for the build
     - name: Archive production artifacts
@@ -69,8 +72,10 @@ jobs:
             npm-feature-${{ hashFiles('package-lock.json') }}
             npm-feature-
             npm-
-      
-      - run: sudo apt-get install -y docker-compose
+      -name: Docker compose setup
+        - uses: KengoTODA/actions-setup-docker-compose@v1
+          with:
+            version: '2.14.2' # the full version of `docker-compose` command
       - run: npm ci
       - run: ${{ matrix.test-command }}
 
