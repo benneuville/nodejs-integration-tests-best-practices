@@ -35,42 +35,23 @@ jobs:
           npm-feature-${{ hashFiles('package-lock.json') }}
           npm-feature-
           npm-
-      
-
-    - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-      name: List the state of node modules
-      continue-on-error: true
-      run: npm list
 
     - run: sudo apt-get install -y docker-compose
     - run: npm ci
+    # create an artifact for the build
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: app
+
     
   # run test in parallel
 
   test:
-    # Run if example-application folder changes
     needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Read .nvmrc
-      run: echo "##[set-output name=NVMRC;]$(cat .nvmrc)"
-      id: nvm
-
-    - name: Use Node.js (.nvmrc)
-      uses: actions/setup-node@v2
-      with:
-        node-version: "${{ steps.nvm.outputs.NVMRC }}"
-
-    - name: Cache node_modules
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          npm-feature-${{ hashFiles('package-lock.json') }}
-          npm-feature-
-          npm-
+    uses: actions/download-artifact@v4
+    with:
+      name: my-artifact
     
     - run: npm run test
   
