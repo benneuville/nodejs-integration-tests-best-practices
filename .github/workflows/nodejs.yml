@@ -73,9 +73,9 @@ jobs:
             npm-feature-
             npm-
       -name: Docker compose setup
-          uses: KengoTODA/actions-setup-docker-compose@v1
-          with:
-            version: '2.14.2' # the full version of `docker-compose` command
+        uses: KengoTODA/actions-setup-docker-compose@v1
+        with:
+          version: '2.14.2' # the full version of `docker-compose` command
       - run: npm ci
       - run: ${{ matrix.test-command }}
 
