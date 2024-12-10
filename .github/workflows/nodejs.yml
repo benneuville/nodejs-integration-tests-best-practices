@@ -15,41 +15,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Read .nvmrc
-      run: echo "##[set-output name=NVMRC;]$(cat .nvmrc)"
-      id: nvm
+      - name: Read .nvmrc
+        run: echo "NVMRC=$(cat .nvmrc)" >> $GITHUB_ENV
+        id: nvm
 
-    - name: Use Node.js (.nvmrc)
-      uses: actions/setup-node@v2
-      with:
-        node-version: "${{ steps.nvm.outputs.NVMRC }}"
+      - name: Use Node.js (.nvmrc)
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NVMRC }}
 
-    - name: Cache node_modules
-      uses: actions/cache@v3
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          npm-feature-${{ hashFiles('package-lock.json') }}
-          npm-feature-
-          npm-
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-feature-${{ hashFiles('package-lock.json') }}
+            npm-feature-
+            npm-
 
-    - name: Docker compose setup
-      uses: KengoTODA/actions-setup-docker-compose@v1
-      with:
-        version: '2.14.2' # the full version of `docker-compose` command
-    - run: npm ci
-    # create an artifact for the build
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: app
-        path: .
+      - name: Docker compose setup
+        uses: KengoTODA/actions-setup-docker-compose@v1
+        with:
+          version: '2.14.2'
 
-    
-  # run test in parallel
+      - run: npm ci
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app
+          path: .
 
   test:
     needs: build
@@ -63,6 +61,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app
+
+      - name: Use Node.js (.nvmrc)
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NVMRC }}
+
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
@@ -72,39 +80,35 @@ jobs:
             npm-feature-${{ hashFiles('package-lock.json') }}
             npm-feature-
             npm-
-      -name: Docker compose setup
+
+      - name: Docker compose setup
         uses: KengoTODA/actions-setup-docker-compose@v1
         with:
-          version: '2.14.2' # the full version of `docker-compose` command
+          version: '2.14.2'
+
       - run: npm ci
       - run: ${{ matrix.test-command }}
 
-
-# check modifications jobs
   changes:
     runs-on: ubuntu-latest
-    # Required permissions
     permissions:
       pull-requests: read
-    # Set job outputs to values from filter step
     outputs:
       source-code: ${{ steps.filter.outputs.src }}
       test: ${{ steps.filter.outputs.test }}
       libraries: ${{ steps.filter.outputs.libraries }}
     steps:
-    # For pull requests it's not necessary to checkout the code
-    - uses: dorny/paths-filter@v3
-      id: filter
-      with:
-        filters: |
-          source-code:
-            - 'example-application/business-logic/**'
-            - 'example-application/data-access/**'
-            - 'example-application/entry-points/**'
-            - 'recipes/**'
-          libraries:
-            - 'example-application/librairies/**'
-          test:
-            - 'example-application/test/**'
-            - 'recipes/**'
-          
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            source-code:
+              - 'example-application/business-logic/**'
+              - 'example-application/data-access/**'
+              - 'example-application/entry-points/**'
+              - 'recipes/**'
+            libraries:
+              - 'example-application/librairies/**'
+            test:
+              - 'example-application/test/**'
+              - 'recipes/**'
