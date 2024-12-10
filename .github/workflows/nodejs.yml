@@ -49,8 +49,7 @@ jobs:
 
   test:
     # Run if example-application folder changes
-    needs: changes build
-    if: ${{ steps.filter.outputs.src == 'true' && steps.filter.outputs.test == 'true' && steps.filter.outputs.libraries == 'true' }}
+    needs: changes
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
