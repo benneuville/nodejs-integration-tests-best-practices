@@ -49,21 +49,21 @@ jobs:
   # run test in parallel
 
   test:
-  needs: build
-  runs-on: ubuntu-latest
-  strategy:
-    matrix:
-      test-command: 
-        - npm run test
-        - npm run test:nestjs
-        - npm run test:mocha
-  steps:
-    - uses: actions/checkout@v2
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: app
-    - run: ${{ matrix.test-command }}
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-command: 
+          - npm run test
+          - npm run test:nestjs
+          - npm run test:mocha
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app
+      - run: ${{ matrix.test-command }}
 
 
 # check modifications jobs
