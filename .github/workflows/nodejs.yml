@@ -47,7 +47,9 @@ jobs:
     
   # run test in parallel
 
-  test: 
+  test:
+    # Run if example-application folder changes
+    if: steps.filter.outputs.src == 'true' && steps.filter.outputs.test == 'true' && steps.filter.outputs.libraries == 'true'
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -70,6 +72,8 @@ jobs:
           npm-feature-${{ hashFiles('package-lock.json') }}
           npm-feature-
           npm-
+    
+    - run: npm run test
   
   test-nestjs:
     runs-on: ubuntu-latest
@@ -95,6 +99,8 @@ jobs:
           npm-feature-
           npm-
 
+    - run: npm run test:nestjs
+
   test-mocha:
     runs-on: ubuntu-latest
     needs: build
@@ -119,3 +125,33 @@ jobs:
           npm-feature-
           npm-
 
+    - run: npm run test:mocha
+
+# check modifications jobs
+  changes-for-tests:
+    runs-on: ubuntu-latest
+    # Required permissions
+    permissions:
+      pull-requests: read
+    # Set job outputs to values from filter step
+    outputs:
+      source-code: ${{ steps.filter.outputs.src }}
+      test: ${{ steps.filter.outputs.test }}
+      libraries: ${{ steps.filter.outputs.libraries }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          source-code:
+            - 'example-application/business-logic/**'
+            - 'example-application/data-access/**'
+            - 'example-application/entry-points/**'
+            - 'recipes/**'
+          libraries:
+            - 'example-application/librairies/**'
+          test:
+            - 'example-application/test/**'
+            - 'recipes/**'
+          
