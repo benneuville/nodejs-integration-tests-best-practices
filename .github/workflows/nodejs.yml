@@ -50,7 +50,8 @@ jobs:
           path: .
 
   test:
-    needs: build
+    needs: build changes
+    if: ${{ needs.build.outputs.src == 'true' && needs.build.outputs.test == 'true' && needs.build.outputs.libraries == 'true' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
