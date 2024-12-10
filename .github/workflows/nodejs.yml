@@ -49,7 +49,7 @@ jobs:
 
   test:
     # Run if example-application folder changes
-    needs: changes
+    needs: build
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -127,7 +127,7 @@ jobs:
     - run: npm run test:mocha
 
 # check modifications jobs
-  changes-for-tests:
+  changes:
     runs-on: ubuntu-latest
     # Required permissions
     permissions:
