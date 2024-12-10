@@ -109,8 +109,7 @@ jobs:
         with:
           filters: |
             source-code:
-              - 'example-application/business-logic/**'
-              - 'example-application/data-access/**'
+              - 'example-application/**'
               - 'example-application/entry-points/**'
               - 'recipes/**'
             test:
