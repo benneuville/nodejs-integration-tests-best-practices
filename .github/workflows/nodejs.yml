@@ -50,8 +50,9 @@ jobs:
   test:
     needs: build
     runs-on: ubuntu-latest
-    uses: actions/download-artifact@v4
-    with:
+    steps:
+    - uses: actions/download-artifact@v4
+    - with:
       name: app
     
     - run: npm run test
