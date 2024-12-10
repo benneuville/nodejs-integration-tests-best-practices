@@ -69,13 +69,7 @@ jobs:
             npm-feature-${{ hashFiles('package-lock.json') }}
             npm-feature-
             npm-
-        
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: app
-      - name: Extract artifact
-        run: unzip app.zip -d ./artifact-directory
+      - run: npm ci
       - run: ${{ matrix.test-command }}
 
 
