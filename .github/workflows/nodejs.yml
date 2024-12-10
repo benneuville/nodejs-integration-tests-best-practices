@@ -43,6 +43,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app
+        path: .
 
     
   # run test in parallel
