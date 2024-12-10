@@ -49,7 +49,8 @@ jobs:
 
   test:
     # Run if example-application folder changes
-    if: steps.filter.outputs.src == 'true' && steps.filter.outputs.test == 'true' && steps.filter.outputs.libraries == 'true'
+    needs: changes
+    if: ${{ steps.filter.outputs.src == 'true' && steps.filter.outputs.test == 'true' && steps.filter.outputs.libraries == 'true' }}
     runs-on: ubuntu-latest
     needs: build
     steps:
