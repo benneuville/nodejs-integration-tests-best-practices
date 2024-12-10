@@ -59,7 +59,17 @@ jobs:
           - npm run test:mocha
     steps:
       - uses: actions/checkout@v2
-      - run: npm install 
+      
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-feature-${{ hashFiles('package-lock.json') }}
+            npm-feature-
+            npm-
+        
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
