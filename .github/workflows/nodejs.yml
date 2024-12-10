@@ -93,11 +93,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
+      contents: read  # Permission pour lire le contenu Git
     outputs:
       source-code: ${{ steps.filter.outputs.src }}
       test: ${{ steps.filter.outputs.test }}
       libraries: ${{ steps.filter.outputs.libraries }}
     steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Cloner avec tout l'historique Git
+      - name: Debug Git Info
+        run: git show-ref || echo "No refs found"
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -107,8 +113,5 @@ jobs:
               - 'example-application/data-access/**'
               - 'example-application/entry-points/**'
               - 'recipes/**'
-            libraries:
-              - 'example-application/librairies/**'
-            test:
-              - 'example-application/test/**'
-              - 'recipes/**'
+    
+
