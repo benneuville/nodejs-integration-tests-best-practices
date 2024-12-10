@@ -27,17 +27,15 @@ jobs:
         node-version: "${{ steps.nvm.outputs.NVMRC }}"
 
     - name: Cache node_modules
-      id: cache-npm
-      uses: actions/cache@v2
-      env:
-        cache-name: cache-node-modules
+      uses: actions/cache@v3
       with:
         path: ~/.npm
-        key: ${{ runner.os }}-build-${{ hashFiles('**/package-lock.json') }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          npm-feature-${{ hashFiles('package-lock.json') }}
+          npm-feature-
+          npm-
+      
           
 
     - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
