@@ -116,5 +116,7 @@ jobs:
             test:
               - 'example-application/test/**'
               - 'recipes/**'
+            libraries:
+              - 'example-application/libraries/**'
     
 
