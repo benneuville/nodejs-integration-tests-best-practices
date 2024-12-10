@@ -74,6 +74,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: app
+      - name: Extract artifact
+        run: unzip app.zip -d ./artifact-directory
       - run: ${{ matrix.test-command }}
 
 
