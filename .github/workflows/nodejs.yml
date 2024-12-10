@@ -48,8 +48,8 @@ jobs:
   # run test in parallel
 
   test:
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: ubuntu-latest
     uses: actions/download-artifact@v4
     with:
       name: app
